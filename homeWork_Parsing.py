@@ -1,6 +1,5 @@
 import requests
 import bs4
-from selenium import webdriver
 
 
 response = requests.get('https://wordsonline.ru/')
@@ -8,8 +7,7 @@ response = requests.get('https://wordsonline.ru/')
 html_page = bs4.BeautifulSoup(response.text, 'html.parser')
 # print(html_page)
 
-# list_href = []
-# data = []
+list_links = []
 
 all_div = html_page.find('div', class_= 'alphabet')
 #print(all_div)
@@ -19,20 +17,22 @@ all_a = all_div.find_all('a')
 
 for a in all_a:
 
-     # obj = {}
-
      list_a = a.get_text('a')
      print(list_a)
 
      href = a.get('href')
-     print(href)
+     # print(href)
+     if "http://wordsonline.ru" not in href:
+          href = ('https://wordsonline.ru' + href)
+          # href = full_link
+          print(href)
 
-     full_link = ('https://wordsonline.ru' + href)
-     href = full_link
-     print(href)
+     # list_links.append(href)
 
-     title = a.get_text('title')
+     title = a.get('title')
      print(title)
+
+     
 
 
 

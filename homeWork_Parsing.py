@@ -1,11 +1,9 @@
 import requests
 import bs4
-# from selenium import webdriver
-# import time
 
 
 
-# driver = webdriver.Firefox(executable_path='/home/vladyslav/IT_Step/sixthLesson_Parsing/geckodriver')
+
 
 response = requests.get('https://wordsonline.ru/')
 
@@ -19,8 +17,6 @@ all_a = all_div.find_all('a')
 
 
 try:
-     # driver.get(url=response)
-     # time.sleep(5)
 
      for a in all_a:
 

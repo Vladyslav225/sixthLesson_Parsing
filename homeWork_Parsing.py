@@ -2,55 +2,52 @@ import requests
 import bs4
 
 
-
+# /home/vladyslav/IT_Step/sixthLesson_Parsing/data/
 
 
 response = requests.get('https://wordsonline.ru/')
 
 html_page = bs4.BeautifulSoup(response.text, 'html.parser')
 
-list_links = []
+list_basic_links = []
 
-all_div = html_page.find('div', class_= 'alphabet')
+div = html_page.find('div', class_= 'alphabet')
 
-all_a = all_div.find_all('a')
+all_a = div.find_all('a')
 
+for a in all_a:
 
-try:
+     href = a.get('href')
+     # print(href)
 
-     for a in all_a:
+     # all_a = a.get_text('a')
+     # print(all_a)
 
-          list_a = a.get_text('a')
-          # print(list_a)
+     # title = a.get('title')
+     # # print(title)
 
-          href = a.get('href')
-          # print(href)
+     full_basic_links = ('https://wordsonline.ru' + href)
+     # print(full_basic_links)
+     list_basic_links.append(full_basic_links)
 
-          if "http://wordsonline.ru" not in href:
-               href = ('https://wordsonline.ru' + href)
-               list_links.append(href)
-               # print(list_links)
+# print(list_basic_links)
 
-          title = a.get('title')
-          # print(title)
+for full_basic_links in list_basic_links:
+     response = requests.get(full_basic_links)
+     # print(response)
 
-     # for href in list_links:
-
-     response = requests.get(list_links[0])
      html_page = bs4.BeautifulSoup(response.text, 'html.parser')
-     print(html_page)
+     # print(html_page)
 
-     # all_div = html_page.find('div', class_= 'alphabet')
+     name_data = full_basic_links.split('/')[-1]
+     print(name_data)
 
-except Exception as ex:
-     print(ex)
-
-# finally:
-     # driver.close
-     # driver.quit
-
-          
+     all_data = html_page.find_all('div', class_ = 'col-sm-3 col-xs-6')
+     print(all_data)
      
+
+     # with open(f'{name_data}.html' 'w') as file:
+     #      file.write
 
 
           

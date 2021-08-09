@@ -40,14 +40,19 @@ for full_basic_links in list_basic_links:
      # print(html_page)
 
      name_data = full_basic_links.split('/')[-1]
-     print(name_data)
+     # print(name_data)
 
-     all_data = html_page.find_all('div', class_ = 'col-sm-3 col-xs-6')
-     print(all_data)
+     all_data = html_page.find('div', class_ = 'col-sm-3 col-xs-6')
+     # print(all_data)
+
+     all_li = all_data.find_all('li')
+     print(all_li)
+
+     # for li in all_li:
+     #      all_a = li.get('a')
+     #      print(all_a)
+
      
-
-     # with open(f'{name_data}.html' 'w') as file:
-     #      file.write
 
 
           

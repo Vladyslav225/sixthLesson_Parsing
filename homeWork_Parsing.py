@@ -1,58 +1,34 @@
 import requests
 import bs4
+import re
 
 
-# /home/vladyslav/IT_Step/sixthLesson_Parsing/data/
 
-
-response = requests.get('https://wordsonline.ru/')
+response = requests.get('https://wordsonline.ru/%D0%90')
 
 html_page = bs4.BeautifulSoup(response.text, 'html.parser')
 
-list_basic_links = []
+h1 = html_page.find('h1').text
+print(h1)
 
-div = html_page.find('div', class_= 'alphabet')
+print()
 
-all_a = div.find_all('a')
+p_text = html_page.find('p').text
+print(p_text)
 
-for a in all_a:
+print()
 
-     href = a.get('href')
-     # print(href)
+all_div = html_page.find_all('div', {'class': 'col-sm-3 col-xs-6'})
 
-     # all_a = a.get_text('a')
-     # print(all_a)
+for div in all_div:
 
-     # title = a.get('title')
-     # # print(title)
-
-     full_basic_links = ('https://wordsonline.ru' + href)
-     # print(full_basic_links)
-     list_basic_links.append(full_basic_links)
-
-# print(list_basic_links)
-
-for full_basic_links in list_basic_links:
-     response = requests.get(full_basic_links)
-     # print(response)
-
-     html_page = bs4.BeautifulSoup(response.text, 'html.parser')
-     # print(html_page)
-
-     name_data = full_basic_links.split('/')[-1]
-     # print(name_data)
-
-     all_data = html_page.find('div', class_ = 'col-sm-3 col-xs-6')
-     # print(all_data)
-
-     all_li = all_data.find_all('li')
-     print(all_li)
-
-     # for li in all_li:
-     #      all_a = li.get('a')
-     #      print(all_a)
-
+     all_li = div.find_next('ul').find_next('li').find_all_next('a')
      
+     for a in all_li:
 
-
+          href = 'https://wordsonline.ru' + a.get('href')
           
+          if '/А/' in href:
+               print(href)
+
+               print(a.text)

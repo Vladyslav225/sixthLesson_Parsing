@@ -1,12 +1,8 @@
 import requests
 import bs4
-import re
-
-from requests.api import delete
 
 
-list_obj = []
-list_ = []
+data = []
 
 
 def get_url(url):
@@ -41,21 +37,20 @@ def get_div_class(bs4_obj):
 
 def get_clean_obj(objs):
 
-     # list_clean_href = []
-
-     # print(objs)
+     d = {}
 
      href = objs.get('href')
 
      if '/А/' in href:
           
-          # list_clean_href.append(clean_heref)
-
           clean_href = 'https://wordsonline.ru' + href
 
           get_a = objs.get_text('a')
 
-          return [get_a, clean_href]
+          d['a'] = get_a
+          d['href'] = clean_href
+
+          return d
 
 
 url = 'https://wordsonline.ru/%D0%90'
@@ -63,7 +58,6 @@ url = 'https://wordsonline.ru/%D0%90'
 url_obj = get_url(url)
 
 get_objs = get_div_class(bs4_obj=url_obj)
-# print(get_objs)
 
 for objs in get_objs:
 
@@ -71,5 +65,9 @@ for objs in get_objs:
 
      if obj == None:
           continue
-     print(obj)
+
+     data.append(obj)
+
+for n in data:
+     print(n)
 

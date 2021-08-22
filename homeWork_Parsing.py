@@ -73,7 +73,7 @@ for div in all_div:
           if '/А/' in href:
 
                a_text = a.get_text('a')
-               print(type(a_text))
+               # print(type(a_text))
 
                data.append(a_text)
                data.append(href)

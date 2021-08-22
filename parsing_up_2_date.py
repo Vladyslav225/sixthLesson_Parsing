@@ -1,4 +1,3 @@
-from typing import Text
 import requests
 import bs4
 

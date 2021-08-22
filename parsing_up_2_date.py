@@ -96,8 +96,15 @@ for data in list_href_products:
      products_name = get_data_products(data_products=data_collection)
 
 for prod in list_products:
+
      print(prod)
      print("----------------------------")
+
+with open('file_parsing.txt', 'w') as file:
+     for prod in list_products:
+          file.write(prod)
+          file.close
+          
 
 
 

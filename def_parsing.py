@@ -20,6 +20,7 @@ def get_div_class(bs4_obj):
 
      try:
           get_div = bs4_obj.find_all('div', {'class': 'col-sm-3 col-xs-6'})
+          # print(type(get_div))
 
      except:
           print("I can't find these attributes, check their presence in site design")
@@ -58,6 +59,8 @@ url = 'https://wordsonline.ru/%D0%90'
 url_obj = get_url(url)
 
 get_objs = get_div_class(bs4_obj=url_obj)
+print(type(get_objs))
+
 
 for objs in get_objs:
 
@@ -66,8 +69,15 @@ for objs in get_objs:
      if obj == None:
           continue
 
+     # write_file = open('/home/vladyslav/IT_Step/sixthLesson_Parsing/parsing.txt', 'r+')
+     # write_file.write(str(obj))
+     # write_file.close()
+
      data.append(obj)
+
+     
 
 for n in data:
      print(n)
+
 

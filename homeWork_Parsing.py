@@ -7,36 +7,37 @@ data = []
 
 obj = {}
 
-# try:
-
-#      response = requests.get('https://wordsonline.ru')
-
-# except Exception as ex:
-#      print(ex)
-
-# html_page = bs4.BeautifulSoup(response.text, 'html.parser')
-
-# all_p = html_page.find_all('p')
-
-# for p in all_p:
-
-#      p_text = str(p.text)
-
-#      try:
-#           pattern = r'\w+'
-#           n = re.findall(pattern, p_text)
-#           print(n)
-
-#      except:
-#           print("I don't understend this text")
-
 try:
-     response = requests.get('https://wordsonline.ru/%D0%90')
+
+     response = requests.get('https://wordsonline.ru')
 
 except Exception as ex:
      print(ex)
 
 html_page = bs4.BeautifulSoup(response.text, 'html.parser')
+
+all_p = html_page.find_all('p')
+
+for p in all_p:
+
+     p_text = str(p.text)
+
+     try:
+          pattern = r'\w+'
+          n = re.findall(pattern, p_text)
+          print(n)
+
+     except:
+          print("I don't understend this text")
+
+try:
+     response = requests.get('https://itc.ua/')
+
+except Exception as ex:
+     print(ex)
+
+html_page = bs4.BeautifulSoup(response.text, 'html.parser')
+print(html_page)
 
 h1_text = html_page.find('h1').text
 
@@ -78,5 +79,5 @@ for div in all_div:
                data.append(href)
 
 
-# for n in data:
-#      print(n)
+for n in data:
+     print(n)

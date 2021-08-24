@@ -1,9 +1,14 @@
 import requests
 import bs4
+import json
+import csv
+import re
 
 
-list_href_products = []
-list_products = []
+
+list_basic_data = []
+
+list_parsing_basic_data = []
 
 
 def get_basic_page(url):
@@ -16,95 +21,94 @@ def get_basic_page(url):
 
      return bs4.BeautifulSoup(req.text, 'html.parser')
 
+def get_a_href(basic_a_href):
 
-def get_all_products(products):
+     obj = {}
 
      try:
-          get_products = products.find_all('div', {'class': 'product-thumb minicard minicard--catalog'})
+          get_href = basic_a_href.a.get('href')
 
      except Exception as ex:
           print(ex)
 
-     return get_products
-
-
-def get_a_text_hrefs(items):
-
-     # objects = {}
-
      try:
-          get_href = items.a.get('href')
+          get_a_txt = basic_a_href.a.img.get('title')
 
      except Exception as ex:
           print(ex)
 
-          # get_a_text = items.get_text('a')
+     obj['Нaзвание игры: '] = get_a_txt
+     obj['Ссылка к иге: '] = get_href
 
-          # objects['href'] = get_href
-          # objects['a'] = get_a_text
+     return obj
 
-     return get_href
-
-#################
-
-def get_data_collection(data):
+def get_pars_data(pars_data):
 
      try:
-          req_data = requests.get(data)
+          req = requests.get(pars_data['Ссылка к иге: '])
 
      except Exception as ex:
           print(ex)
 
-     return bs4.BeautifulSoup(req_data.text, 'html.parser')
+     return bs4.BeautifulSoup(req.text, 'html.parser')
 
+def get_title_price_description(h1_p_div, prod):
 
-def get_data_products(data_products):
+     try:
+          product_title = h1_p_div.find('h1', {'id': 'prod_name'}).get_text().strip()
 
-     prod_name = data_products.find('h1', {'id': 'prod_name'}).text
+     except Exception as ex:
+          print(ex)
 
-     prod_price = data_products.find('div', {'class': 'product-page-price'}).text
-     
-     prod_text = data_products.find('div', {'id': 'tab-description'}).text
+     replace_list = product_title.replace(u'\xa0', u' ')
 
-     list_products.append(f'Название игры: {prod_name}')
-     list_products.append(f'Цена за игру: {prod_price}')
-     list_products.append(prod_text)
-   
-     return list_products
+     try:
+          product_price = h1_p_div.find('div', {'class': 'product-page-price'}).get_text().strip()
 
+     except Exception as ex:
+          print(ex)
+
+     try:
+          product_text = h1_p_div.find('div', {'id': 'tab-description'}).get_text().strip()
+
+     except Exception as ex:
+          print(ex)
+
+     prod = [
+          ['Название игры:', product_title],
+          ['Цена за игру:', product_price],
+          ['Описание:', product_text]
+     ]
+
+     return prod
 
 
 url = 'https://up2date.com.ua/igrovie-pristavki/igry-ps4.html'
 
 basic_url = get_basic_page(url)
 
-div_rows = basic_url.find('div', {'class': 'row grid-rows'})
-
-div_products = get_all_products(products=div_rows)
+div_row_products = basic_url.find('div', {'class': 'row grid-rows'}).find_all('div', {'class': 'product-thumb minicard minicard--catalog'})
 
 
-for items in div_products:
+for basic_a_href in div_row_products:
 
-     a_href = get_a_text_hrefs(items)
+     a_href = get_a_href(basic_a_href)
 
-     list_href_products.append(a_href)
+     list_basic_data.append(a_href)
 
-for data in list_href_products:
+for pars_data in list_basic_data:
 
-     data_collection = get_data_collection(data)
+     all_data = get_pars_data(pars_data)
 
-     products_name = get_data_products(data_products=data_collection)
+     title_price_description = get_title_price_description(h1_p_div=all_data, prod=pars_data)
+     
+     list_parsing_basic_data.append(title_price_description)
 
-for prod in list_products:
+     with open('file_parsing.csv', 'w', encoding='utf-8') as file:
+          writer = csv.writer(file)
+          writer.writerows(list_parsing_basic_data)
 
-     print(prod)
-     print("----------------------------")
-
-with open('file_parsing.txt', 'w') as file:
-     for prod in list_products:
-          file.write(prod)
-          file.close
-          
-
-
+     with open('file_parsing.json', 'w') as file:
+          file.write(json.dumps(list_parsing_basic_data))
+          file.close()
 
